@@ -139,7 +139,7 @@ async def predict_crop(data: CropInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Top 3 crops prediction (NEW FEATURE!)
+# Top 3 crops prediction (FIXED - Now shows 3 DIFFERENT crops!)
 @app.post("/predict-top-3")
 async def predict_top_crops(data: CropInput):
     try:
@@ -155,7 +155,7 @@ async def predict_top_crops(data: CropInput):
         # Get probabilities for all crops
         probabilities = crop_model.predict_proba(input_scaled)[0]
         
-        # Get top 3 crop indices
+        # Get top 3 DIFFERENT crop indices (highest probabilities)
         top_3_indices = probabilities.argsort()[-3:][::-1]
         
         results = []
@@ -163,9 +163,18 @@ async def predict_top_crops(data: CropInput):
             crop_name = label_encoder.inverse_transform([idx])[0]
             confidence = float(probabilities[idx] * 100)
             
-            # Predict yield and price
-            predicted_yield = float(yield_model.predict(input_data)[0])
-            predicted_price = float(price_model.predict(input_data)[0])
+            # CHANGED: Get crop-specific yield and price from training data
+            crop_specific_data = crop_data[crop_data['Crop'] == crop_name]
+            
+            if not crop_specific_data.empty:
+                # Use average yield/price for THIS specific crop from historical data
+                predicted_yield = float(crop_specific_data['Yield'].mean())
+                predicted_price = float(crop_specific_data['Price'].mean())
+            else:
+                # Fallback: use model prediction if crop not found
+                predicted_yield = float(yield_model.predict(input_data)[0])
+                predicted_price = float(price_model.predict(input_data)[0])
+            
             revenue = 0.01 * predicted_yield * predicted_price
             
             results.append({
@@ -183,7 +192,6 @@ async def predict_top_crops(data: CropInput):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 # Get list of all available crops
 @app.get("/crops")
 async def get_crops():
