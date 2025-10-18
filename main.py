@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import pickle
 import numpy as np
+import requests
 
 app = FastAPI(title="Crop Recommendation API")
 
@@ -198,7 +199,7 @@ async def predict_top_crops(data: CropInput):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-        
+
 # Get list of all available crops
 @app.get("/crops")
 async def get_crops():
@@ -223,3 +224,28 @@ async def health_check():
             price_model is not None
         ])
     }
+    
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+@app.get("/weather/{city}")
+async def get_weather(city: str):
+    try:
+        API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Safe!
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+        
+        response = requests.get(url)
+        data = response.json()
+        
+        return {
+            "success": True,
+            "temperature": data['main']['temp'],
+            "humidity": data['main']['humidity'],
+            "rainfall": data.get('rain', {}).get('1h', 0),
+            "city": city
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
