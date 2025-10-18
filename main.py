@@ -97,7 +97,7 @@ async def root():
     return {
         "message": "🌾 Crop Recommendation API is running!",
         "version": "1.0",
-        "endpoints": ["/predict", "/predict-top-3", "/crops"]
+        "endpoints": ["/predict", "/predict-top-3", "/crops", "/weather/{city}"]
     }
 
 # Single crop prediction
@@ -224,7 +224,7 @@ async def health_check():
             price_model is not None
         ])
     }
-    
+
 import os
 from dotenv import load_dotenv
 
@@ -249,3 +249,69 @@ async def get_weather(city: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# Language translations
+TRANSLATIONS = {
+    "en": {
+        "nitrogen": "Nitrogen",
+        "phosphorus": "Phosphorus",
+        "potassium": "Potassium",
+        "temperature": "Temperature",
+        "humidity": "Humidity",
+        "ph_value": "pH Value",
+        "rainfall": "Rainfall",
+        "crop": "Crop",
+        "yield": "Yield",
+        "price": "Price",
+        "revenue": "Revenue"
+    },
+    "hi": {
+        "nitrogen": "नाइट्रोजन",
+        "phosphorus": "फास्फोरस",
+        "potassium": "पोटैशियम",
+        "temperature": "तापमान",
+        "humidity": "आर्द्रता",
+        "ph_value": "पीएच मान",
+        "rainfall": "वर्षा",
+        "crop": "फसल",
+        "yield": "उपज",
+        "price": "मूल्य",
+        "revenue": "राजस्व"
+    },
+    "mr": {
+        "nitrogen": "नायट्रोजन",
+        "phosphorus": "फॉस्फरस",
+        "potassium": "पोटॅशियम",
+        "temperature": "तापमान",
+        "humidity": "आर्द्रता",
+        "ph_value": "पीएच मूल्य",
+        "rainfall": "पाऊस",
+        "crop": "पीक",
+        "yield": "उत्पन्न",
+        "price": "किंमत",
+        "revenue": "महसूल"
+    }
+}
+
+@app.get("/translations/{lang}")
+async def get_translations(lang: str):
+    if lang not in TRANSLATIONS:
+        raise HTTPException(status_code=404, detail="Language not supported")
+    
+    return {
+        "success": True,
+        "language": lang,
+        "translations": TRANSLATIONS[lang]
+    }
+
+# how many languages options are to be shown in frontend
+@app.get("/languages")
+async def get_languages():
+    return {
+        "success": True,
+        "languages": [
+            {"code": "en", "name": "English"},
+            {"code": "hi", "name": "हिंदी"},
+            {"code": "mr", "name": "मराठी"}
+        ]
+    }
