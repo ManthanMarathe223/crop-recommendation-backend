@@ -139,39 +139,41 @@ async def predict_crop(data: CropInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Top 3 crops prediction (FIXED - Now shows 3 DIFFERENT crops!)
 @app.post("/predict-top-3")
 async def predict_top_crops(data: CropInput):
     try:
-        # Prepare input
         input_data = [[
             data.nitrogen, data.phosphorus, data.potassium,
             data.temperature, data.humidity, data.ph_value, data.rainfall
         ]]
         
-        # Scale input
         input_scaled = scaler.transform(input_data)
-        
-        # Get probabilities for all crops
         probabilities = crop_model.predict_proba(input_scaled)[0]
         
-        # Get top 3 DIFFERENT crop indices (highest probabilities)
-        top_3_indices = probabilities.argsort()[-3:][::-1]
+        # Get ALL crops sorted by probability
+        all_indices = probabilities.argsort()[::-1]
         
         results = []
-        for idx in top_3_indices:
+        seen_crops = set()  # Track unique crops
+        
+        # Keep adding until we have 3 DIFFERENT crops
+        for idx in all_indices:
             crop_name = label_encoder.inverse_transform([idx])[0]
+            
+            # Skip if we already added this crop
+            if crop_name in seen_crops:
+                continue
+                
+            seen_crops.add(crop_name)
             confidence = float(probabilities[idx] * 100)
             
-            # CHANGED: Get crop-specific yield and price from training data
+            # Get crop-specific data
             crop_specific_data = crop_data[crop_data['Crop'] == crop_name]
             
             if not crop_specific_data.empty:
-                # Use average yield/price for THIS specific crop from historical data
                 predicted_yield = float(crop_specific_data['Yield'].mean())
                 predicted_price = float(crop_specific_data['Price'].mean())
             else:
-                # Fallback: use model prediction if crop not found
                 predicted_yield = float(yield_model.predict(input_data)[0])
                 predicted_price = float(price_model.predict(input_data)[0])
             
@@ -184,6 +186,10 @@ async def predict_top_crops(data: CropInput):
                 "price_per_quintal": round(predicted_price, 2),
                 "estimated_revenue": round(revenue, 2)
             })
+            
+            # Stop after 3 unique crops
+            if len(results) == 3:
+                break
         
         return {
             "success": True,
@@ -192,6 +198,7 @@ async def predict_top_crops(data: CropInput):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+        
 # Get list of all available crops
 @app.get("/crops")
 async def get_crops():
