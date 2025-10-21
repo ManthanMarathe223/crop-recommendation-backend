@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 import requests
 from config import OPENWEATHER_API_KEY
 
-router = APIRouter(prefix="/api", tags=["Weather"])
+router = APIRouter(prefix="", tags=["Weather"])
 
 @router.get("/weather/{city}")
 async def get_weather(city: str):

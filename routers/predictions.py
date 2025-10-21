@@ -3,7 +3,7 @@ import numpy as np
 from models import CropInput
 from ml_models import get_models
 
-router = APIRouter(prefix="/api", tags=["Predictions"])
+router = APIRouter(prefix="", tags=["Predictions"])
 
 @router.post("/predict")
 async def predict_crop(data: CropInput):

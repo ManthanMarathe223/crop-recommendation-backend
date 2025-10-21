@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from config import TRANSLATIONS, LANGUAGES
 
-router = APIRouter(prefix="/api", tags=["Translations"])
+router = APIRouter(prefix="", tags=["Translations"])
 
 @router.get("/translations/{lang}")
 async def get_translations(lang: str):

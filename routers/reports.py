@@ -10,7 +10,7 @@ from datetime import datetime
 from models import CropInput
 from ml_models import get_models
 
-router = APIRouter(prefix="/api", tags=["Reports"])
+router = APIRouter(prefix="", tags=["Reports"])
 
 @router.post("/generate-report")
 async def generate_pdf_report(data: CropInput):

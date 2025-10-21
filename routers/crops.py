@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from ml_models import get_models
 
-router = APIRouter(prefix="/api", tags=["Crops"])
+router = APIRouter(prefix="", tags=["Crops"])
 
 @router.get("/crops")
 async def get_all_crops():
