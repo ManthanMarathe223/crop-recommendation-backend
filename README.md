@@ -1,5 +1,25 @@
 # 🌾 Crop Recommendation Backend API
 
+<div align="center">
+
+**[📋 Overview](#-overview)** • 
+**[🚀 Features](#-features)** • 
+**[📁 Structure](#-project-structure)** • 
+**[🛠️ Tech Stack](#️-tech-stack)** • 
+**[📊 ML Models](#-machine-learning-models)** • 
+**[🌐 API Endpoints](#-api-endpoints)** • 
+**[🔧 Installation](#-installation--setup)** • 
+**[🚀 Deployment](#-deployment)** 
+
+• 
+**[🧪 Testing](#-testing)** • 
+**[👥 Team](#-team)** • 
+**[🔗 Links](#-related-links)**
+
+---
+
+</div>
+
 ## 📋 Overview
 
 This is the backend API for the **Indra Dhanu** Crop Recommendation System, built for climate-resilient agriculture. The system uses Machine Learning to predict optimal crops based on soil and climate parameters.
@@ -488,31 +508,30 @@ This project is licensed under the MIT License.
 
 **Indra Dhanu Hackathon 2025 - Team**
 
-- **Backend Developer:** [Your Name]
-- **Frontend Developer:** [Person 2 Name]
-- **Integration Specialist:** [Person 3 Name]
-
+- **Backend Developer:** [Manthan Marathe](https://github.com/ManthanMarathe223)
+- **Frontend Developer:** [Vrushab Hirap](https://github.com/VrushabhHirapOfficial)
+  
 ---
 
 ## 🙏 Acknowledgments
 
 - **Hackathon:** Indra Dhanu 2025
 - **Theme:** Smart & Climate-Resilient Agriculture
-- **Institution:** PCCOE (Pimpri Chinchwad College of Engineering)
+- **Institution:** Pimpri Chinchwad College of Engineering Pune (PCCOE)
 
 ---
 
 ## 📧 Contact
 
-For questions or support, reach out to: [your.email@example.com]
+For questions or support, reach out to: marathemanthanofficial@gmail.com
 
 ---
 
 ## 🔗 Related Links
 
-- **Frontend Repository:** [GitHub Link]
-- **Live Demo:** [Vercel URL]
-- **API Documentation:** [Render URL/docs]
+- **Frontend Repository:** [GitHub Link](https://github.com/VrushabhHirapOfficial/crop-recommendation-frontend)
+- **Live Demo:** [Vercel URL](http://indradhanu.vercel.app)
+- **API Documentation:** [Render URL/docs](https://crop-recommendation-api-vudg.onrender.com/docs)
 
 ---
 
